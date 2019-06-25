@@ -12,7 +12,7 @@ use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-class Article
+class Page
 {
 
     protected $id;
@@ -21,15 +21,12 @@ class Article
     protected $parent_token;
     protected $author_token;
     protected $editor_token;
-    protected $article_date;
-    protected $article_publish_date;
-    protected $article_expires_date;
-    protected $article_content;
-    protected $article_title;
-    protected $article_excerpt;
-    protected $article_status;
-    protected $article_type;
-    protected $article_password;
+    protected $content;
+    protected $title;
+    protected $excerpt;
+    protected $status;
+    protected $page_type;
+    protected $page_password;
     protected $slug;
     protected $created_at;
     protected $updated_at;
@@ -45,11 +42,6 @@ class Article
     public function defaultValues(){
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
-        $this->setArticleStatus("NEW");
-        $this->setArticleTitle("Untitled Article");
-        $this->setSlug($this->getArticleTitle()."-".time()."-".mt_rand(2,100));
-        $this->setArticleDate(gmdate("Y-m-d H:i:s"));
-        $this->setArticlePublishDate(gmdate("Y-m-d H:i:s"));
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
@@ -168,49 +160,34 @@ class Article
         return $this->editor_token;
     }
 
-    public function getArticleDate()
+    public function getContent()
     {
-        return $this->article_date;
+        return $this->content;
     }
 
-    public function getArticlePublishDate()
+    public function getTitle()
     {
-        return $this->article_publish_date;
+        return $this->title;
     }
 
-    public function getArticleExpiresDate()
+    public function getExcerpt()
     {
-        return $this->article_expires_date;
+        return $this->excerpt;
     }
 
-    public function getArticleContent()
+    public function getStatus()
     {
-        return $this->article_content;
+        return $this->status;
     }
 
-    public function getArticleTitle()
+    public function getPageType()
     {
-        return $this->article_title;
+        return $this->page_type;
     }
 
-    public function getArticleExcerpt()
+    public function getPagePassword()
     {
-        return $this->article_excerpt;
-    }
-
-    public function getArticleStatus()
-    {
-        return $this->article_status;
-    }
-
-    public function getArticleType()
-    {
-        return $this->article_type;
-    }
-
-    public function getArticlePassword()
-    {
-        return $this->article_password;
+        return $this->page_password;
     }
 
     public function getSlug()
@@ -314,72 +291,54 @@ class Article
         return $this;
     }
 
-    public function setArticleDate($value = null) : Self
+    public function setContent($value = null) : Self
     {
-        $this->article_date = $value;
+        $this->content = $value;
         return $this;
     }
 
-    public function setArticlePublishDate($value = null) : Self
+    public function setTitle($value = null) : Self
     {
-        $this->article_publish_date = $value;
+        $this->title = $value;
         return $this;
     }
 
-    public function setArticleExpiresDate($value = null) : Self
+    public function setExcerpt($value = null) : Self
     {
-        $this->article_expires_date = $value;
+        $this->excerpt = $value;
         return $this;
     }
 
-    public function setArticleContent($value = null) : Self
-    {
-        $this->article_content = $value;
-        return $this;
-    }
-
-    public function setArticleTitle($value = null) : Self
-    {
-        $this->article_title = $value;
-        return $this;
-    }
-
-    public function setArticleExcerpt($value = null) : Self
-    {
-        $this->article_excerpt = $value;
-        return $this;
-    }
-
-    public function setArticleStatus($value = null) : Self
+    public function setStatus($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->article_status = $value;
+        $this->status = $value;
         return $this;
     }
 
-    public function setArticleType($value = null) : Self
+    public function setPageType($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->article_type = $value;
+        $this->page_type = $value;
         return $this;
     }
 
-    public function setArticlePassword($value = null) : Self
+    public function setPagePassword($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 255)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
         }
 
-        $this->article_password = $value;
+        $this->page_password = $value;
         return $this;
     }
 

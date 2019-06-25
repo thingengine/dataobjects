@@ -6,31 +6,33 @@ declare(strict_types=1);
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace ThingEngine\DataObjects\Content;
+namespace ThingEngine\DataObjects\Contact;
 
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-class Article
+class Address
 {
 
     protected $id;
     protected $token;
     protected $ref_token;
-    protected $parent_token;
-    protected $author_token;
-    protected $editor_token;
-    protected $article_date;
-    protected $article_publish_date;
-    protected $article_expires_date;
-    protected $article_content;
-    protected $article_title;
-    protected $article_excerpt;
-    protected $article_status;
-    protected $article_type;
-    protected $article_password;
-    protected $slug;
+    protected $street_1;
+    protected $street_2;
+    protected $street_3;
+    protected $post_office_box;
+    protected $suite_apartment;
+    protected $locality;
+    protected $region;
+    protected $postal_code;
+    protected $country;
+    protected $address_type;
+    protected $is_primary;
+    protected $is_public;
+    protected $label;
+    protected $latitude;
+    protected $longitude;
     protected $created_at;
     protected $updated_at;
     protected $deleted_at;
@@ -45,11 +47,6 @@ class Article
     public function defaultValues(){
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
-        $this->setArticleStatus("NEW");
-        $this->setArticleTitle("Untitled Article");
-        $this->setSlug($this->getArticleTitle()."-".time()."-".mt_rand(2,100));
-        $this->setArticleDate(gmdate("Y-m-d H:i:s"));
-        $this->setArticlePublishDate(gmdate("Y-m-d H:i:s"));
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
@@ -153,69 +150,79 @@ class Article
         return $this->ref_token;
     }
 
-    public function getParentToken()
+    public function getStreet1()
     {
-        return $this->parent_token;
+        return $this->street_1;
     }
 
-    public function getAuthorToken()
+    public function getStreet2()
     {
-        return $this->author_token;
+        return $this->street_2;
     }
 
-    public function getEditorToken()
+    public function getStreet3()
     {
-        return $this->editor_token;
+        return $this->street_3;
     }
 
-    public function getArticleDate()
+    public function getPostOfficeBox()
     {
-        return $this->article_date;
+        return $this->post_office_box;
     }
 
-    public function getArticlePublishDate()
+    public function getSuiteApartment()
     {
-        return $this->article_publish_date;
+        return $this->suite_apartment;
     }
 
-    public function getArticleExpiresDate()
+    public function getLocality()
     {
-        return $this->article_expires_date;
+        return $this->locality;
     }
 
-    public function getArticleContent()
+    public function getRegion()
     {
-        return $this->article_content;
+        return $this->region;
     }
 
-    public function getArticleTitle()
+    public function getPostalCode()
     {
-        return $this->article_title;
+        return $this->postal_code;
     }
 
-    public function getArticleExcerpt()
+    public function getCountry()
     {
-        return $this->article_excerpt;
+        return $this->country;
     }
 
-    public function getArticleStatus()
+    public function getAddressType()
     {
-        return $this->article_status;
+        return $this->address_type;
     }
 
-    public function getArticleType()
+    public function getIsPrimary()
     {
-        return $this->article_type;
+        return $this->is_primary;
     }
 
-    public function getArticlePassword()
+    public function getIsPublic()
     {
-        return $this->article_password;
+        return $this->is_public;
     }
 
-    public function getSlug()
+    public function getLabel()
     {
-        return $this->slug;
+        return $this->label;
+    }
+
+    public function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    public function getLongitude()
+    {
+        return $this->longitude;
     }
 
     public function getCreatedAt()
@@ -281,116 +288,148 @@ class Article
         return $this;
     }
 
-    public function setParentToken($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->parent_token = $value;
-        return $this;
-    }
-
-    public function setAuthorToken($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->author_token = $value;
-        return $this;
-    }
-
-    public function setEditorToken($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->editor_token = $value;
-        return $this;
-    }
-
-    public function setArticleDate($value = null) : Self
-    {
-        $this->article_date = $value;
-        return $this;
-    }
-
-    public function setArticlePublishDate($value = null) : Self
-    {
-        $this->article_publish_date = $value;
-        return $this;
-    }
-
-    public function setArticleExpiresDate($value = null) : Self
-    {
-        $this->article_expires_date = $value;
-        return $this;
-    }
-
-    public function setArticleContent($value = null) : Self
-    {
-        $this->article_content = $value;
-        return $this;
-    }
-
-    public function setArticleTitle($value = null) : Self
-    {
-        $this->article_title = $value;
-        return $this;
-    }
-
-    public function setArticleExcerpt($value = null) : Self
-    {
-        $this->article_excerpt = $value;
-        return $this;
-    }
-
-    public function setArticleStatus($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_status = $value;
-        return $this;
-    }
-
-    public function setArticleType($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_type = $value;
-        return $this;
-    }
-
-    public function setArticlePassword($value = null) : Self
+    public function setStreet1($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 255)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
         }
 
-        $this->article_password = $value;
+        $this->street_1 = $value;
         return $this;
     }
 
-    public function setSlug($value = null) : Self
+    public function setStreet2($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 255)->validate($value))
+        if(!Validator::stringType()->length(1, 128)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
         }
 
-        $this->slug = $value;
+        $this->street_2 = $value;
+        return $this;
+    }
+
+    public function setStreet3($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 128)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
+        }
+
+        $this->street_3 = $value;
+        return $this;
+    }
+
+    public function setPostOfficeBox($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 16)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 16 Characters");
+        }
+
+        $this->post_office_box = $value;
+        return $this;
+    }
+
+    public function setSuiteApartment($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 16)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 16 Characters");
+        }
+
+        $this->suite_apartment = $value;
+        return $this;
+    }
+
+    public function setLocality($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 64)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 64 Characters");
+        }
+
+        $this->locality = $value;
+        return $this;
+    }
+
+    public function setRegion($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 64)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 64 Characters");
+        }
+
+        $this->region = $value;
+        return $this;
+    }
+
+    public function setPostalCode($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 12)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 12 Characters");
+        }
+
+        $this->postal_code = $value;
+        return $this;
+    }
+
+    public function setCountry($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 3)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 3 Characters");
+        }
+
+        $this->country = $value;
+        return $this;
+    }
+
+    public function setAddressType($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->address_type = $value;
+        return $this;
+    }
+
+    public function setIsPrimary($value = null) : Self
+    {
+        $this->is_primary = $value;
+        return $this;
+    }
+
+    public function setIsPublic($value = null) : Self
+    {
+        $this->is_public = $value;
+        return $this;
+    }
+
+    public function setLabel($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 32)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 32 Characters");
+        }
+
+        $this->label = $value;
+        return $this;
+    }
+
+    public function setLatitude($value = null) : Self
+    {
+        $this->latitude = $value;
+        return $this;
+    }
+
+    public function setLongitude($value = null) : Self
+    {
+        $this->longitude = $value;
         return $this;
     }
 

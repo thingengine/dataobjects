@@ -6,31 +6,25 @@ declare(strict_types=1);
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace ThingEngine\DataObjects\Content;
+namespace ThingEngine\DataObjects\Common;
 
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-class Article
+class Category
 {
 
     protected $id;
     protected $token;
     protected $ref_token;
-    protected $parent_token;
-    protected $author_token;
-    protected $editor_token;
-    protected $article_date;
-    protected $article_publish_date;
-    protected $article_expires_date;
-    protected $article_content;
-    protected $article_title;
-    protected $article_excerpt;
-    protected $article_status;
-    protected $article_type;
-    protected $article_password;
+    protected $category_type;
+    protected $title;
+    protected $description;
     protected $slug;
+    protected $is_active;
+    protected $sort_order;
+    protected $featured;
     protected $created_at;
     protected $updated_at;
     protected $deleted_at;
@@ -45,11 +39,6 @@ class Article
     public function defaultValues(){
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
-        $this->setArticleStatus("NEW");
-        $this->setArticleTitle("Untitled Article");
-        $this->setSlug($this->getArticleTitle()."-".time()."-".mt_rand(2,100));
-        $this->setArticleDate(gmdate("Y-m-d H:i:s"));
-        $this->setArticlePublishDate(gmdate("Y-m-d H:i:s"));
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
@@ -153,69 +142,39 @@ class Article
         return $this->ref_token;
     }
 
-    public function getParentToken()
+    public function getCategoryType()
     {
-        return $this->parent_token;
+        return $this->category_type;
     }
 
-    public function getAuthorToken()
+    public function getTitle()
     {
-        return $this->author_token;
+        return $this->title;
     }
 
-    public function getEditorToken()
+    public function getDescription()
     {
-        return $this->editor_token;
-    }
-
-    public function getArticleDate()
-    {
-        return $this->article_date;
-    }
-
-    public function getArticlePublishDate()
-    {
-        return $this->article_publish_date;
-    }
-
-    public function getArticleExpiresDate()
-    {
-        return $this->article_expires_date;
-    }
-
-    public function getArticleContent()
-    {
-        return $this->article_content;
-    }
-
-    public function getArticleTitle()
-    {
-        return $this->article_title;
-    }
-
-    public function getArticleExcerpt()
-    {
-        return $this->article_excerpt;
-    }
-
-    public function getArticleStatus()
-    {
-        return $this->article_status;
-    }
-
-    public function getArticleType()
-    {
-        return $this->article_type;
-    }
-
-    public function getArticlePassword()
-    {
-        return $this->article_password;
+        return $this->description;
     }
 
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    public function getIsActive()
+    {
+        return $this->is_active;
+    }
+
+    public function getSortOrder()
+    {
+        return $this->sort_order;
+    }
+
+    public function getFeatured()
+    {
+        return $this->featured;
     }
 
     public function getCreatedAt()
@@ -281,116 +240,65 @@ class Article
         return $this;
     }
 
-    public function setParentToken($value = null) : Self
+    public function setCategoryType($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
+        if(!Validator::stringType()->length(1, 8)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 8 Characters");
         }
 
-        $this->parent_token = $value;
+        $this->category_type = $value;
         return $this;
     }
 
-    public function setAuthorToken($value = null) : Self
+    public function setTitle($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
+        if(!Validator::stringType()->length(1, 128)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
         }
 
-        $this->author_token = $value;
+        $this->title = $value;
         return $this;
     }
 
-    public function setEditorToken($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->editor_token = $value;
-        return $this;
-    }
-
-    public function setArticleDate($value = null) : Self
-    {
-        $this->article_date = $value;
-        return $this;
-    }
-
-    public function setArticlePublishDate($value = null) : Self
-    {
-        $this->article_publish_date = $value;
-        return $this;
-    }
-
-    public function setArticleExpiresDate($value = null) : Self
-    {
-        $this->article_expires_date = $value;
-        return $this;
-    }
-
-    public function setArticleContent($value = null) : Self
-    {
-        $this->article_content = $value;
-        return $this;
-    }
-
-    public function setArticleTitle($value = null) : Self
-    {
-        $this->article_title = $value;
-        return $this;
-    }
-
-    public function setArticleExcerpt($value = null) : Self
-    {
-        $this->article_excerpt = $value;
-        return $this;
-    }
-
-    public function setArticleStatus($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_status = $value;
-        return $this;
-    }
-
-    public function setArticleType($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_type = $value;
-        return $this;
-    }
-
-    public function setArticlePassword($value = null) : Self
+    public function setDescription($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 255)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
         }
 
-        $this->article_password = $value;
+        $this->description = $value;
         return $this;
     }
 
     public function setSlug($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 255)->validate($value))
+        if(!Validator::stringType()->length(1, 128)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
         }
 
         $this->slug = $value;
+        return $this;
+    }
+
+    public function setIsActive($value = null) : Self
+    {
+        $this->is_active = $value;
+        return $this;
+    }
+
+    public function setSortOrder($value = null) : Self
+    {
+        $this->sort_order = $value;
+        return $this;
+    }
+
+    public function setFeatured($value = null) : Self
+    {
+        $this->featured = $value;
         return $this;
     }
 

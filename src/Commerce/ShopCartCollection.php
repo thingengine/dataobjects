@@ -6,31 +6,33 @@ declare(strict_types=1);
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace ThingEngine\DataObjects\Content;
+namespace ThingEngine\DataObjects\Commerce;
 
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-class Article
+class ShopCartCollection
 {
 
     protected $id;
     protected $token;
     protected $ref_token;
+    protected $cart_token;
     protected $parent_token;
-    protected $author_token;
-    protected $editor_token;
-    protected $article_date;
-    protected $article_publish_date;
-    protected $article_expires_date;
-    protected $article_content;
-    protected $article_title;
-    protected $article_excerpt;
-    protected $article_status;
-    protected $article_type;
-    protected $article_password;
-    protected $slug;
+    protected $collection_type;
+    protected $status;
+    protected $sku;
+    protected $title;
+    protected $quantity;
+    protected $shippable;
+    protected $customer_pickup;
+    protected $price_per_item;
+    protected $tax_total;
+    protected $discount_total;
+    protected $coupon_total;
+    protected $fees_total;
+    protected $grand_total;
     protected $created_at;
     protected $updated_at;
     protected $deleted_at;
@@ -45,11 +47,6 @@ class Article
     public function defaultValues(){
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
-        $this->setArticleStatus("NEW");
-        $this->setArticleTitle("Untitled Article");
-        $this->setSlug($this->getArticleTitle()."-".time()."-".mt_rand(2,100));
-        $this->setArticleDate(gmdate("Y-m-d H:i:s"));
-        $this->setArticlePublishDate(gmdate("Y-m-d H:i:s"));
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
@@ -153,69 +150,79 @@ class Article
         return $this->ref_token;
     }
 
+    public function getCartToken()
+    {
+        return $this->cart_token;
+    }
+
     public function getParentToken()
     {
         return $this->parent_token;
     }
 
-    public function getAuthorToken()
+    public function getCollectionType()
     {
-        return $this->author_token;
+        return $this->collection_type;
     }
 
-    public function getEditorToken()
+    public function getStatus()
     {
-        return $this->editor_token;
+        return $this->status;
     }
 
-    public function getArticleDate()
+    public function getSku()
     {
-        return $this->article_date;
+        return $this->sku;
     }
 
-    public function getArticlePublishDate()
+    public function getTitle()
     {
-        return $this->article_publish_date;
+        return $this->title;
     }
 
-    public function getArticleExpiresDate()
+    public function getQuantity()
     {
-        return $this->article_expires_date;
+        return $this->quantity;
     }
 
-    public function getArticleContent()
+    public function getShippable()
     {
-        return $this->article_content;
+        return $this->shippable;
     }
 
-    public function getArticleTitle()
+    public function getCustomerPickup()
     {
-        return $this->article_title;
+        return $this->customer_pickup;
     }
 
-    public function getArticleExcerpt()
+    public function getPricePerItem()
     {
-        return $this->article_excerpt;
+        return $this->price_per_item;
     }
 
-    public function getArticleStatus()
+    public function getTaxTotal()
     {
-        return $this->article_status;
+        return $this->tax_total;
     }
 
-    public function getArticleType()
+    public function getDiscountTotal()
     {
-        return $this->article_type;
+        return $this->discount_total;
     }
 
-    public function getArticlePassword()
+    public function getCouponTotal()
     {
-        return $this->article_password;
+        return $this->coupon_total;
     }
 
-    public function getSlug()
+    public function getFeesTotal()
     {
-        return $this->slug;
+        return $this->fees_total;
+    }
+
+    public function getGrandTotal()
+    {
+        return $this->grand_total;
     }
 
     public function getCreatedAt()
@@ -281,6 +288,17 @@ class Article
         return $this;
     }
 
+    public function setCartToken($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->cart_token = $value;
+        return $this;
+    }
+
     public function setParentToken($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
@@ -292,105 +310,101 @@ class Article
         return $this;
     }
 
-    public function setAuthorToken($value = null) : Self
+    public function setCollectionType($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->author_token = $value;
+        $this->collection_type = $value;
         return $this;
     }
 
-    public function setEditorToken($value = null) : Self
+    public function setStatus($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->editor_token = $value;
+        $this->status = $value;
         return $this;
     }
 
-    public function setArticleDate($value = null) : Self
+    public function setSku($value = null) : Self
     {
-        $this->article_date = $value;
-        return $this;
-    }
-
-    public function setArticlePublishDate($value = null) : Self
-    {
-        $this->article_publish_date = $value;
-        return $this;
-    }
-
-    public function setArticleExpiresDate($value = null) : Self
-    {
-        $this->article_expires_date = $value;
-        return $this;
-    }
-
-    public function setArticleContent($value = null) : Self
-    {
-        $this->article_content = $value;
-        return $this;
-    }
-
-    public function setArticleTitle($value = null) : Self
-    {
-        $this->article_title = $value;
-        return $this;
-    }
-
-    public function setArticleExcerpt($value = null) : Self
-    {
-        $this->article_excerpt = $value;
-        return $this;
-    }
-
-    public function setArticleStatus($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
+        if(!Validator::stringType()->length(1, 32)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 32 Characters");
         }
 
-        $this->article_status = $value;
+        $this->sku = $value;
         return $this;
     }
 
-    public function setArticleType($value = null) : Self
+    public function setTitle($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
+        if(!Validator::stringType()->length(1, 128)->validate($value))
         {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
         }
 
-        $this->article_type = $value;
+        $this->title = $value;
         return $this;
     }
 
-    public function setArticlePassword($value = null) : Self
+    public function setQuantity($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 255)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
-        }
-
-        $this->article_password = $value;
+        $this->quantity = $value;
         return $this;
     }
 
-    public function setSlug($value = null) : Self
+    public function setShippable($value = null) : Self
     {
-        if(!Validator::stringType()->length(1, 255)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
-        }
+        $this->shippable = $value;
+        return $this;
+    }
 
-        $this->slug = $value;
+    public function setCustomerPickup($value = null) : Self
+    {
+        $this->customer_pickup = $value;
+        return $this;
+    }
+
+    public function setPricePerItem($value = null) : Self
+    {
+        $this->price_per_item = $value;
+        return $this;
+    }
+
+    public function setTaxTotal($value = null) : Self
+    {
+        $this->tax_total = $value;
+        return $this;
+    }
+
+    public function setDiscountTotal($value = null) : Self
+    {
+        $this->discount_total = $value;
+        return $this;
+    }
+
+    public function setCouponTotal($value = null) : Self
+    {
+        $this->coupon_total = $value;
+        return $this;
+    }
+
+    public function setFeesTotal($value = null) : Self
+    {
+        $this->fees_total = $value;
+        return $this;
+    }
+
+    public function setGrandTotal($value = null) : Self
+    {
+        $this->grand_total = $value;
         return $this;
     }
 

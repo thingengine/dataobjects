@@ -6,31 +6,33 @@ declare(strict_types=1);
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
-namespace ThingEngine\DataObjects\Content;
+namespace ThingEngine\DataObjects\Common;
 
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 
-class Article
+class Person
 {
 
     protected $id;
     protected $token;
     protected $ref_token;
-    protected $parent_token;
-    protected $author_token;
-    protected $editor_token;
-    protected $article_date;
-    protected $article_publish_date;
-    protected $article_expires_date;
-    protected $article_content;
-    protected $article_title;
-    protected $article_excerpt;
-    protected $article_status;
-    protected $article_type;
-    protected $article_password;
+    protected $ref_token_2;
+    protected $person_type;
     protected $slug;
+    protected $name_prefix;
+    protected $name_first;
+    protected $name_middle;
+    protected $name_last;
+    protected $name_suffix;
+    protected $name_nickname;
+    protected $name_post_nominal;
+    protected $known_for;
+    protected $date_of_birth;
+    protected $date_of_death;
+    protected $identifier_1;
+    protected $identifier_2;
     protected $created_at;
     protected $updated_at;
     protected $deleted_at;
@@ -45,11 +47,6 @@ class Article
     public function defaultValues(){
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
-        $this->setArticleStatus("NEW");
-        $this->setArticleTitle("Untitled Article");
-        $this->setSlug($this->getArticleTitle()."-".time()."-".mt_rand(2,100));
-        $this->setArticleDate(gmdate("Y-m-d H:i:s"));
-        $this->setArticlePublishDate(gmdate("Y-m-d H:i:s"));
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
@@ -153,69 +150,79 @@ class Article
         return $this->ref_token;
     }
 
-    public function getParentToken()
+    public function getRefToken2()
     {
-        return $this->parent_token;
+        return $this->ref_token_2;
     }
 
-    public function getAuthorToken()
+    public function getPersonType()
     {
-        return $this->author_token;
-    }
-
-    public function getEditorToken()
-    {
-        return $this->editor_token;
-    }
-
-    public function getArticleDate()
-    {
-        return $this->article_date;
-    }
-
-    public function getArticlePublishDate()
-    {
-        return $this->article_publish_date;
-    }
-
-    public function getArticleExpiresDate()
-    {
-        return $this->article_expires_date;
-    }
-
-    public function getArticleContent()
-    {
-        return $this->article_content;
-    }
-
-    public function getArticleTitle()
-    {
-        return $this->article_title;
-    }
-
-    public function getArticleExcerpt()
-    {
-        return $this->article_excerpt;
-    }
-
-    public function getArticleStatus()
-    {
-        return $this->article_status;
-    }
-
-    public function getArticleType()
-    {
-        return $this->article_type;
-    }
-
-    public function getArticlePassword()
-    {
-        return $this->article_password;
+        return $this->person_type;
     }
 
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    public function getNamePrefix()
+    {
+        return $this->name_prefix;
+    }
+
+    public function getNameFirst()
+    {
+        return $this->name_first;
+    }
+
+    public function getNameMiddle()
+    {
+        return $this->name_middle;
+    }
+
+    public function getNameLast()
+    {
+        return $this->name_last;
+    }
+
+    public function getNameSuffix()
+    {
+        return $this->name_suffix;
+    }
+
+    public function getNameNickname()
+    {
+        return $this->name_nickname;
+    }
+
+    public function getNamePostNominal()
+    {
+        return $this->name_post_nominal;
+    }
+
+    public function getKnownFor()
+    {
+        return $this->known_for;
+    }
+
+    public function getDateOfBirth()
+    {
+        return $this->date_of_birth;
+    }
+
+    public function getDateOfDeath()
+    {
+        return $this->date_of_death;
+    }
+
+    public function getIdentifier1()
+    {
+        return $this->identifier_1;
+    }
+
+    public function getIdentifier2()
+    {
+        return $this->identifier_2;
     }
 
     public function getCreatedAt()
@@ -281,116 +288,148 @@ class Article
         return $this;
     }
 
-    public function setParentToken($value = null) : Self
+    public function setRefToken2($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->parent_token = $value;
+        $this->ref_token_2 = $value;
         return $this;
     }
 
-    public function setAuthorToken($value = null) : Self
+    public function setPersonType($value = null) : Self
     {
         if(!Validator::stringType()->length(1, 36)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
         }
 
-        $this->author_token = $value;
-        return $this;
-    }
-
-    public function setEditorToken($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->editor_token = $value;
-        return $this;
-    }
-
-    public function setArticleDate($value = null) : Self
-    {
-        $this->article_date = $value;
-        return $this;
-    }
-
-    public function setArticlePublishDate($value = null) : Self
-    {
-        $this->article_publish_date = $value;
-        return $this;
-    }
-
-    public function setArticleExpiresDate($value = null) : Self
-    {
-        $this->article_expires_date = $value;
-        return $this;
-    }
-
-    public function setArticleContent($value = null) : Self
-    {
-        $this->article_content = $value;
-        return $this;
-    }
-
-    public function setArticleTitle($value = null) : Self
-    {
-        $this->article_title = $value;
-        return $this;
-    }
-
-    public function setArticleExcerpt($value = null) : Self
-    {
-        $this->article_excerpt = $value;
-        return $this;
-    }
-
-    public function setArticleStatus($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_status = $value;
-        return $this;
-    }
-
-    public function setArticleType($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 36)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
-        }
-
-        $this->article_type = $value;
-        return $this;
-    }
-
-    public function setArticlePassword($value = null) : Self
-    {
-        if(!Validator::stringType()->length(1, 255)->validate($value))
-        {
-            throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
-        }
-
-        $this->article_password = $value;
+        $this->person_type = $value;
         return $this;
     }
 
     public function setSlug($value = null) : Self
     {
+        if(!Validator::stringType()->length(1, 128)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 128 Characters");
+        }
+
+        $this->slug = $value;
+        return $this;
+    }
+
+    public function setNamePrefix($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_prefix = $value;
+        return $this;
+    }
+
+    public function setNameFirst($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_first = $value;
+        return $this;
+    }
+
+    public function setNameMiddle($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_middle = $value;
+        return $this;
+    }
+
+    public function setNameLast($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_last = $value;
+        return $this;
+    }
+
+    public function setNameSuffix($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_suffix = $value;
+        return $this;
+    }
+
+    public function setNameNickname($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_nickname = $value;
+        return $this;
+    }
+
+    public function setNamePostNominal($value = null) : Self
+    {
+        if(!Validator::stringType()->length(1, 36)->validate($value))
+        {
+            throw new \InvalidArgumentException("token must be between 1 and 36 Characters");
+        }
+
+        $this->name_post_nominal = $value;
+        return $this;
+    }
+
+    public function setKnownFor($value = null) : Self
+    {
         if(!Validator::stringType()->length(1, 255)->validate($value))
         {
             throw new \InvalidArgumentException("token must be between 1 and 255 Characters");
         }
 
-        $this->slug = $value;
+        $this->known_for = $value;
+        return $this;
+    }
+
+    public function setDateOfBirth($value = null) : Self
+    {
+        $this->date_of_birth = $value;
+        return $this;
+    }
+
+    public function setDateOfDeath($value = null) : Self
+    {
+        $this->date_of_death = $value;
+        return $this;
+    }
+
+    public function setIdentifier1($value = null) : Self
+    {
+        $this->identifier_1 = $value;
+        return $this;
+    }
+
+    public function setIdentifier2($value = null) : Self
+    {
+        $this->identifier_2 = $value;
         return $this;
     }
 
