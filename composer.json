@@ -1,0 +1,31 @@
+{
+  "name": "thingengine/dataobjects",
+  "description": "Data Objects to speed up CRUD Development",
+  "homepage": "http://thingengine.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Trent Ramseyer",
+      "email": "trentramseyer@gmail.com",
+      "homepage": "http://www.trentramseyer.com/",
+      "role": "Original Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0",
+    "respect/validation": "^1.1",
+    "ramsey/uuid": "^3.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "ThingEngine\\DataObjects\\": "./src",
+      "ThingEngine\\DataObjects\\Activity\\" : "./src/Activity",
+      "ThingEngine\\DataObjects\\Commerce\\" : "./src/Commerce",
+      "ThingEngine\\DataObjects\\Common\\" : "./src/Common",
+      "ThingEngine\\DataObjects\\Contact\\" : "./src/Contact",
+      "ThingEngine\\DataObjects\\Content\\" : "./src/Content",
+      "ThingEngine\\DataObjects\\Media\\" : "./src/Media",
+      "ThingEngine\\DataObjects\\Medical\\" : "./src/Medical"
+    }
+  }
+}
