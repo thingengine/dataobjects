@@ -1,11 +1,13 @@
 # DataObjects
 PHP Based Data Objects to speed up CRUD development
 
+- Data Objects intend to be as generic and useful as can be in a Schema.org manner
 - All tables are created with an Autoincrement ID and a Token (UUID)
 - All tables in include at least one ref_token to match ownership
 - All tables have created_at, updated_at, deleted_at timestamps
 - All tables have created_by, updated_by, deleted_by token fields for tracking. 
 - Query class includes build in paging and other simple Query Builder commands for ease of use.
+- Query class uses (PDO::FETCH_CLASS, 'ThingEngine\DataObjects\*') to return data objects
 
 ## Examples
     
