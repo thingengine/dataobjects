@@ -14,12 +14,10 @@ use PDOStatement;
 class Query
 {
 
-    /* @var MyPDO */
     protected $db;
     protected $data;
     protected $table_name;
     protected $class_name;
-
     protected $columns = "*";
     protected $where = null;
     protected $params = [];
@@ -27,6 +25,12 @@ class Query
     protected $offset = 0;
     protected $order_by = "";
 
+    /**
+     * Query constructor.
+     * @param PDO $db
+     * @param $table_name
+     * @param $class_name
+     */
     public function __construct(PDO $db, $table_name, $class_name)
     {
         $this->db = $db;
@@ -34,6 +38,10 @@ class Query
         $this->class_name = $class_name;
     }
 
+    /**
+     * Reset parameters for new query
+     * @return $this
+     */
     public function reset(){
         $this->columns = "*";
         $this->where = null;
@@ -44,8 +52,12 @@ class Query
         return $this;
     }
 
-
-    // a helper function to run prepared statements smoothly
+    /**
+     * a helper function to run prepared statements smoothly
+     * @param $sql
+     * @param array $args
+     * @return bool|PDOStatement
+     */
     public function run($sql, $args = [])
     {
         if (!$args)
@@ -57,85 +69,139 @@ class Query
         return $stmt;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getData(){
+        return $this->data;
+    }
 
+    /**
+     * @param $table_name
+     * @return $this
+     */
     public function setTableName($table_name){
         $this->table_name = $table_name;
         return $this;
     }
 
+    /**
+     * @param $class_name
+     * @return $this
+     */
     public function setClassName($class_name){
         $this->class_name = $class_name;
         return $this;
     }
 
-
-
+    /**
+     * @param Int $page
+     * @param Int $limit
+     * @return $this
+     */
     public function paginate(Int $page, Int $limit){
         $this->limit($limit);
         $this->offset((((Int) ($page ?? 1) - 1) * 2));
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function paginateByRequest(){
         $this->limit = ((Int) ($_REQUEST['pp'] ?? 25));
         $this->offset = (((Int) ($_REQUEST['p'] ?? 1) - 1) * 2);
         return $this;
     }
 
+    /**
+     * @param Int $limit
+     * @return $this
+     */
     public function limit(Int $limit){
         $this->limit = $limit;
         return $this;
     }
 
+    /**
+     * @param Int $offset
+     * @return $this
+     */
     public function offset(Int $offset){
         $this->offset = $offset;
         return $this;
     }
 
-
-    public function where(string $column, string $condition, $value){
-
+    /**
+     * @return string
+     */
+    public function whereStart(){
         if(empty($this->where)){
-            $this->where = " WHERE ".$column."  ".$condition." ? ";
+            return " WHERE ";
         } else {
-            $this->where .= " AND ".$column."  ".$condition." ? ";
+            return " AND ";
         }
+    }
 
+    /**
+     * @param string $column
+     * @param string $condition
+     * @param $value
+     * @return $this
+     */
+    public function where(string $column, string $condition, $value){
+        $this->where .= $this->whereStart()." ".$column."  ".$condition." ? ";
         $this->params[] = $value;
         return $this;
     }
 
+    /**
+     * @param string $column
+     * @param $value1
+     * @param $value2
+     * @return $this
+     */
     public function between(string $column, $value1, $value2){
-
-        if(empty($this->where)){
-            $this->where = " WHERE ".$column." BETWEEN ? AND ? ";
-        } else {
-            $this->where .= " AND ".$column." BETWEEN ? AND ? ";
-        }
-
+        $this->where .= $this->whereStart()." ".$column." BETWEEN ? AND ? ";
         $this->params[] = $value1;
         $this->params[] = $value2;
         return $this;
     }
 
 
+    /**
+     * @param string $column
+     * @param array $values
+     * @return $this
+     */
     public function whereIn(string $column, array $values){
-        if(empty($this->where)){
-            $this->where = " WHERE ".$column."  IN ( ".implode(',', array_fill(0, count($values), '?'))." )";
-        } else {
-            $this->where .= " AND ".$column."  IN ( ".implode(',', array_fill(0, count($values), '?'))." )";
-        }
-
+        $this->where .=  $this->whereStart()." ".$column."  IN ( ".implode(',', array_fill(0, count($values), '?'))." )";
         foreach($values as $value){
             $this->params[] = $value;
         }
-
-
         return $this;
     }
 
-    public function orderBy($column, $direction = "DESC"){
 
+    /**
+     * @param string $column
+     * @param array $values
+     * @return $this
+     */
+    public function whereNotIn(string $column, array $values){
+        $this->where .=  $this->whereStart()." ".$column."  NOT IN ( ".implode(',', array_fill(0, count($values), '?'))." )";
+        foreach($values as $value){
+            $this->params[] = $value;
+        }
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param string $direction
+     * @return $this
+     */
+    public function orderBy($column, $direction = "DESC"){
         if(!in_array(strtoupper($direction),['ASC','DESC']))
             $direction = "DESC";
 
@@ -143,8 +209,10 @@ class Query
         return $this;
     }
 
-
-
+    /**
+     * @param String $sql
+     * @return String
+     */
     protected function setSql(String $sql = "")
     {
         if ($sql == "") {
@@ -166,7 +234,9 @@ class Query
         return $sql;
     }
 
-
+    /**
+     * @return mixed
+     */
     public function getPaging(){
         $paging['page'] = $this->offset + 1;
         $paging['per_page'] = $this->limit;
@@ -175,7 +245,9 @@ class Query
         return $paging;
     }
 
-
+    /**
+     * @return int
+     */
     public function recordCount(){
         $sql = " SELECT count(id) as total_records FROM " . $this->table_name . " ";
         $sql .= " " . $this->where . " ";
@@ -183,23 +255,32 @@ class Query
         return $results['total_records'] ?? 0;
     }
 
+    /**
+     * @param string $sql
+     * @param string $params
+     * @return array
+     */
     public function fetchAll($sql = "", $params = "")
     {
         return $this->data = $this->run($this->setSql($sql), $this->params)->fetchAll(PDO::FETCH_CLASS, $this->class_name);
     }
 
+    /**
+     * @return mixed
+     */
     public function fetch()
     {
         return $this->data = $this->run($this->setSql(), $this->params)->fetch(PDO::FETCH_CLASS, $this->class_name);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     * @return array
+     */
     public function fetchList($key,$value){
         $this->columns = $key.",".$value;
         return $this->data = $this->run($this->setSql(), $this->params)->fetchAll(PDO::FETCH_KEY_PAIR);
-    }
-
-    public function getData(){
-        return $this->data;
     }
 
 
@@ -228,6 +309,11 @@ class Query
     }
 
 
+    /**
+     * @param $data
+     * @param array $exclude
+     * @return bool|PDOStatement
+     */
     public function update($data,  $exclude = array()){
         $fields = $values = array();
 
