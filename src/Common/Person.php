@@ -11,8 +11,9 @@ namespace ThingEngine\DataObjects\Common;
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use ThingEngine\DataObjects\DataObject;
 
-class Person
+class Person extends DataObject
 {
 
     protected $id;
@@ -48,51 +49,6 @@ class Person
         $uuid4 = Uuid::uuid4();
         $this->setToken($uuid4->toString());
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
-    }
-
-
-    /**
-     * @return null
-     */
-    public function toArray(){
-
-        foreach(get_object_vars ( $this ) as $property=>$value){
-            $func = "get".str_replace("_", "", ucwords($property, "_"));
-            if (method_exists($this, $func)){
-                $value = $this->$func();
-                if(!is_null($value)){
-                    $data[$property] = $this->$func();
-                }
-            }
-        }
-
-        return $data ?? null;
-    }
-
-
-    /**
-     * @param $property
-     * @return mixed
-     */
-    public function __get($property) {
-
-        $func = "get".str_replace("_", "", ucwords($property, "_"));
-        if (method_exists($this, $func)){
-            return $this->$func();
-        }
-    }
-
-
-    /**
-     * @param $property
-     * @param $value
-     * @return mixed
-     */
-    public function __set($property, $value) {
-        $func = "set".str_replace("_", "", ucwords($property, "_"));
-        if (method_exists($this, $func)){
-            return $this->$func($value);
-        }
     }
 
 

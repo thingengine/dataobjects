@@ -11,8 +11,9 @@ namespace ThingEngine\DataObjects\Commerce;
 use Respect\Validation\Validator as Validator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use ThingEngine\DataObjects\DataObject;
 
-class Coupon
+class Coupon extends DataObject
 {
 
     protected $id;
@@ -44,85 +45,6 @@ class Coupon
         $this->setCreatedAt(gmdate("Y-m-d H:i:s"));
     }
 
-
-    /**
-     * @return null
-     */
-    public function toArray(){
-
-        foreach(get_object_vars ( $this ) as $property=>$value){
-            $func = "get".str_replace("_", "", ucwords($property, "_"));
-            if (method_exists($this, $func)){
-                $value = $this->$func();
-                if(!is_null($value)){
-                    $data[$property] = $this->$func();
-                }
-            }
-        }
-
-        return $data ?? null;
-    }
-
-
-    /**
-     * @param $property
-     * @return mixed
-     */
-    public function __get($property) {
-
-        $func = "get".str_replace("_", "", ucwords($property, "_"));
-        if (method_exists($this, $func)){
-            return $this->$func();
-        }
-    }
-
-
-    /**
-     * @param $property
-     * @param $value
-     * @return mixed
-     */
-    public function __set($property, $value) {
-        $func = "set".str_replace("_", "", ucwords($property, "_"));
-        if (method_exists($this, $func)){
-            return $this->$func($value);
-        }
-    }
-
-
-    /**
-     * @param array $data
-     * @return $this
-     * @throws \Exception
-     */
-    public function addValues(Array $data)
-    {
-
-        try {
-            if (!empty($data)) {
-                foreach ($data as $key => $value) {
-                    // We are going to set the value, this will handle filters
-                    $set_func = "set" . str_replace("_", "", ucwords($key, "_"));
-                    if (method_exists($this, $set_func)) {
-                        if (is_numeric($value)) {
-                            $value = (int)$value;
-                        }
-                        $this->$set_func($value);
-                    }
-
-                }
-            }
-
-        } catch(\InvalidArgumentException $e){
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        } catch (\TypeError $e) {
-            throw new \TypeError($e->getMessage(), $e->getCode(), $e);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage(), $e->getCode(), $e);
-        }
-
-        return $this;
-    }
 
 
     /**********************
